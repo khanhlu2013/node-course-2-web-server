@@ -15,7 +15,6 @@ app.set({
 });
 
 //middleware
-app.use(express.static(__dirname + '/public'));
 app.use((req,res,next)=>{
     const now = new Date().toString();
     const log = `${now}: ${req.method} ${req.url}`;
@@ -23,9 +22,14 @@ app.use((req,res,next)=>{
     fs.appendFile('server.log',log + '\n',err=>{ if(err) console.log('unable to log into file')});
     next();
 })
-// app.use((req,res,next)=>{
-//     res.render('maintenance.hbs');
-// });
+const maintenance = false;
+if(maintenance){
+    app.use((req,res,next)=>{
+        res.render('maintenance.hbs');
+    });
+}
+app.use(express.static(__dirname + '/public'));
+
 
 //route
 app.get('/',(req,res)=>{
@@ -35,6 +39,9 @@ app.get('/',(req,res)=>{
 })
 app.get('/about',(req,res)=>{
     res.render('about.hbs');
+})
+app.get('/projects',(req,res)=>{
+    res.render('projects.hbs');
 })
 
 //listen
