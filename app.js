@@ -1,7 +1,7 @@
 const express = require('express');
 const hbs = require('hbs');
 const fs = require('fs');
-
+const port = process.env.PORT || 3000;
 const app = express();
 
 //hbs
@@ -20,12 +20,12 @@ app.use((req,res,next)=>{
     const now = new Date().toString();
     const log = `${now}: ${req.method} ${req.url}`;
     console.log(log);
-    fs.appendFile('server.log',log + '\n',e=>console.log('unable to log into file'));
+    fs.appendFile('server.log',log + '\n',err=>{ if(err) console.log('unable to log into file')});
     next();
 })
-app.use((req,res,next)=>{
-    res.render('maintenance.hbs');
-});
+// app.use((req,res,next)=>{
+//     res.render('maintenance.hbs');
+// });
 
 //route
 app.get('/',(req,res)=>{
@@ -38,4 +38,4 @@ app.get('/about',(req,res)=>{
 })
 
 //listen
-app.listen(3000,()=>{console.log('App is serving no port 3000')});
+app.listen(port,()=>{console.log(`App is serving no port ${port}`)});
